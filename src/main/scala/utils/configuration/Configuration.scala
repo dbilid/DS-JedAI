@@ -29,6 +29,8 @@ sealed trait ConfigurationT {
 
     def getTheta: ThetaOption = ThetaOption.withName(configurations.getOrElse(InputConfigurations.CONF_THETA_GRANULARITY, "avg"))
 
+    def getExp: String =  configurations.getOrElse("exp", "-")
+
     def getMainWF: WeightingFunction = WeightingFunction.withName(configurations.getOrElse(InputConfigurations.CONF_MAIN_WF, "JS"))
 
     def getSecondaryWF: Option[WeightingFunction] = configurations.get(InputConfigurations.CONF_SECONDARY_WF) match {

@@ -112,6 +112,8 @@ class ConfigurationParser {
 					nextOption(map ++ Map(InputConfigurations.CONF_QUALIFYING_PAIRS -> value), tail)
 				case "-dcmpT" :: value :: tail =>
 					nextOption(map ++ Map(InputConfigurations.CONF_DECOMPOSITION_THRESHOLD -> value), tail)
+				case ("-xp" | "-exp") :: value :: tail =>
+                    			nextOption(map ++ Map("exp" -> value), tail)
 				case key :: tail =>
 					nextOption(Map(InputConfigurations.CONF_UNRECOGNIZED -> key), tail)
 			}

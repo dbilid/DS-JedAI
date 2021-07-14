@@ -55,6 +55,7 @@ object GiantExp {
         val entityTypeType: EntityTypeENUM = conf.getEntityType
         val decompositionT: Int = conf.getDecompositionThreshold
         val startTime = Calendar.getInstance().getTimeInMillis
+	val exportpath = conf.getExp
 
         log.info(s"GridType: $gridType")
         log.info(s"Relation: $relation")
@@ -130,5 +131,14 @@ object GiantExp {
 
         val endTime = Calendar.getInstance().getTimeInMillis
         log.info("DS-JEDAI: Total Execution Time: " + (endTime - startTime) / 1000.0)
+
+	//giant.getDE9IM.take(10).foreach(println)
+        //giant.getDE9IM.coalesce(1, shuffle = true).saveAsTextFile(exportpath)
+	if(! exportpath.equals("-") ) {
+		giant.getDE9IM.take(10).foreach(println)
+        	giant.getDE9IM.map(im => (im.getId1, im.getId2, im.isContains, im.isCoveredBy, im.isCovers, im.isCrosses, im.isEquals, im.isIntersects, im.isOverlaps, im.isTouches, im.isWithin)).coalesce(1, shuffle = true).saveAsTextFile(exportpath)
+	}
+
+
     }
 }
