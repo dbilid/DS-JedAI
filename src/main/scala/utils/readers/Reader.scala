@@ -91,10 +91,12 @@ object Reader {
      * @return a spatial RDD
      */
     def loadRdfAsTextual(filepath: String, geometryPredicate: String): SpatialRDD[Geometry] = {
+        val geometries : List[String] = geometryPredicate.split("&&&").toList;
+        System.out.println(" predicate: " + geometryPredicate + "/n split: " + geometries.toString)
         val cleanWKT = (wkt: String) => wkt.replaceAll("<\\S+>\\s?", "").replaceAll("\"", "")
         val rowRDD: RDD[Row] = spark.read.textFile(filepath)
             .rdd.map(s => s.split(" ", 3))
-            .filter(s => s(1) == geometryPredicate)
+            .filter(s => geometries.contains(s(1)))
             .map(s => (s(0), cleanWKT(s(2))))
             .filter(s => s._1 != null && s._2 != null && !s._2.isEmpty)
             .filter(s => !s._2.contains("EMPTY"))

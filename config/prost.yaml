@@ -1,11 +1,13 @@
 
 source:
-  path: "hdfs:///Projects/synthetic/input/HEXAGON_SMALL.nt"
-  geometryField: "http://geographica.di.uoa.gr/generator/landOwnership/asWKT"
+  path: "hdfs:///Projects/synthetic/input/*.nt"
+  geometryField: "http://geographica.di.uoa.gr/generator/landOwnership/asWKT&&&http://geographica.di.uoa.gr/generator/state/asWKT&&&http://geographica.di.uoa.gr/generator/road/asWKT&&&http://geographica.di.uoa.gr/generator/pointOfInterest/asWKT"
+  # if multiple geometry fields use delimiter : '&&&'
 
 target:
-  path: "hdfs:///Projects/synthetic/input/HEXAGON_LARGE.nt"
-  geometryField: "http://geographica.di.uoa.gr/generator/state/asWKT"
+  path: "hdfs:///Projects/synthetic/input/*.nt"
+  geometryField: "http://geographica.di.uoa.gr/generator/state/asWKT&&&http://geographica.di.uoa.gr/generator/landOwnership/asWKT&&&http://geographica.di.uoa.gr/generator/road/asWKT&&&http://geographica.di.uoa.gr/generator/pointOfInterest/asWKT"
+  # if multiple geometry fields use delimiter : '&&&'
 
 relation: "DE9IM"                                       # the target relation. With DE-9IM will discover all topological relations
 
