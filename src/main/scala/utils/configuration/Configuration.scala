@@ -51,6 +51,8 @@ sealed trait ConfigurationT {
 
     def getOutputPath: Option[String] = configurations.get(InputConfigurations.CONF_OUTPUT)
 
+    def getOutputDB: Option[String] = configurations.get(InputConfigurations.CONF_OUTPUT_DB)
+
     def getEntityType: EntityTypeENUM = EntityTypeENUM.withName(configurations.getOrElse(InputConfigurations.CONF_ENTITY_TYPE, "SPATIAL_ENTITY"))
 
     def measureStatistic: Boolean = configurations.contains(InputConfigurations.CONF_STATISTICS)

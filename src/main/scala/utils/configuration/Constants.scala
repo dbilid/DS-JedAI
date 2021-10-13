@@ -103,6 +103,7 @@ object Constants {
 		val CONF_GRID_TYPE = "gridType"
 		val CONF_WS = "ws"
 		val CONF_OUTPUT = "outputPath"
+		val CONF_OUTPUT_DB = "outputDB"
 		val CONF_ENTITY_TYPE = "entityType"
 		val CONF_STATISTICS = "stats"
 		val CONF_TOTAL_VERIFICATIONS = "totalVerifications"

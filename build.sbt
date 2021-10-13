@@ -8,7 +8,8 @@ scalacOptions ++= Seq("-feature", "-language:reflectiveCalls")
 
 libraryDependencies ++= Seq(
 	"org.apache.spark" %%  "spark-core" % sparkVersion % Provided,
-	"org.apache.spark" %%  "spark-sql" % sparkVersion  % Provided
+	"org.apache.spark" %%  "spark-sql" % sparkVersion  % Provided,
+	"org.apache.spark" %%  "spark-hive" % sparkVersion % Provided
 //	"org.apache.spark" %% "spark-graphx" % sparkVersion % Provided
 )
 

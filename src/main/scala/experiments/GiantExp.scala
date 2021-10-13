@@ -29,13 +29,15 @@ object GiantExp {
         val log = LogManager.getRootLogger
         log.setLevel(Level.INFO)
 
-        val sparkConf = new SparkConf()
-            .setAppName("DS-JedAI")
-            .set("spark.serializer", classOf[KryoSerializer].getName)
-            .set("spark.kryo.registrator", classOf[SedonaKryoRegistrator].getName)
+        //val sparkConf = new SparkConf()
+        //    .setAppName("DS-JedAI")
+        //    .set("spark.serializer", classOf[KryoSerializer].getName)
+        //    .set("spark.kryo.registrator", classOf[SedonaKryoRegistrator].getName)
 
-        val sc = new SparkContext(sparkConf)
-        val spark: SparkSession = SparkSession.builder().getOrCreate()
+        //val sc = new SparkContext(sparkConf)
+        val spark: SparkSession = SparkSession.builder().appName("Jedai").enableHiveSupport().getOrCreate()
+
+	//spark.sql("USE synthetic")
 
         val parser = new ConfigurationParser()
         val configurationOpt = parser.parse(args) match {
@@ -52,6 +54,7 @@ object GiantExp {
         val relation = conf.getRelation
         val printCount = conf.measureStatistic
         val output: Option[String] = conf.getOutputPath
+	val outputDB: Option[String] = conf.getOutputDB
         val entityTypeType: EntityTypeENUM = conf.getEntityType
         val decompositionT: Int = conf.getDecompositionThreshold
         val startTime = Calendar.getInstance().getTimeInMillis
@@ -96,10 +99,11 @@ object GiantExp {
         else if (relation.equals(Relation.DE9IM)) {
             val imRDD = giant.getDE9IM
 
-            // export results as RDF
+            // export results to Hive
             if (output.isDefined) {
                 imRDD.persist(StorageLevel.MEMORY_AND_DISK)
-                Utils.exportRDF(imRDD, output.get)
+		Utils.exportHive(imRDD, output.get, outputDB.get, spark)
+                //Utils.exportRDF(imRDD, output.get)
             }
 
             // log results

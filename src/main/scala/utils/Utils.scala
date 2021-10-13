@@ -13,6 +13,8 @@ import org.locationtech.jts.geom.Envelope
 import scala.collection.mutable
 import scala.reflect.ClassTag
 import cats.implicits._
+import org.apache.hadoop.io.compress.GzipCodec
+import org.apache.spark.sql.hive.HiveContext
 
 object Utils extends Serializable {
 
@@ -119,6 +121,31 @@ object Utils extends Serializable {
 			if (im.isWithin)
 				sb.append( im.getId1 + " " + within + " " + im.getId2 + " .\n")
 			sb.toString()
+		}.saveAsTextFile(path, classOf[GzipCodec])
+	}
+
+	def exportStrabo2(rdd: RDD[IM], path:String): Unit ={
+		rdd.map { im =>
+			val sb = new StringBuilder()
+			if(im.isContains || im.isCoveredBy || im.isCovers || im.isCrosses ||
+				im.isEquals || im.isIntersects || im.isOverlaps || im.isWithin) {
+				sb.append(im.getId1  + "," + im.getId2 + "," + im.isContains+ "," +im.isCoveredBy+ "," +im.isCovers+ "," +im.isCrosses + "," + im.isEquals+ "," +im.isIntersects+ "," +im.isOverlaps+ "," +im.isWithin +"\n")
+			}		
+			sb.toString()
 		}.saveAsTextFile(path)
+	}	
+
+	def exportHive(rdd: RDD[IM], tablename:String, databaseName:String, spark:SparkSession): Unit ={
+		val hiveContext = new HiveContext(rdd.context)
+		import hiveContext.implicits._
+		//val spark: SparkSession = SparkSession.builder().appName("Hive-Loader").enableHiveSupport().getOrCreate()
+		//spark.sql("CREATE DATABASE IF NOT EXISTS " + databaseName)
+        	spark.sql("USE " + databaseName)
+                //val imDF = 
+		rdd.filter(x=>x.im.isContains || x.isCoveredBy || x.isCovers || x.isCrosses ||
+                                x.isEquals || x.isIntersects || x.isOverlaps || x.isWithin)
+			.map { im => (im.getId1, im.getId2, im.isContains, im.isCoveredBy, im.isCovers, im.isCrosses, im.isEquals, im.isIntersects, im.isOverlaps, im.isWithin)}
+			.toDF("id1", "id2", "contains", "coveredBy", "covers", "crosses", "equals", "intersects", "overlaps", "isWithin").write.format("parquet").saveAsTable(tablename)
+        	//imDF.write.saveAsTable(tablename)
 	}
 }
